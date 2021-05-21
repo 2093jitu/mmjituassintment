@@ -35,8 +35,8 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/list")
-	public Response getAll(@RequestBody(required = false) String reqObj) {
-		return employeeService.list(reqObj);
+	public Response getAll() {
+		return employeeService.list(); 
 	}
 
 }

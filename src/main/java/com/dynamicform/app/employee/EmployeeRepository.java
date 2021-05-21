@@ -124,11 +124,8 @@ public class EmployeeRepository extends AuthBaseRepository {
 //		return getSuccessResponse("Update Successfull");
 //	}
 
-	public Response list(String reqObj) {
-		EmployeeEntity billsBToBLabPolicyObj = null;
-		if (null != reqObj) {
-			billsBToBLabPolicyObj = objectMapperReadValue(reqObj, EmployeeEntity.class);
-		}
+	public Response list() {
+		EmployeeEntity billsBToBLabPolicyObj = new EmployeeEntity();
 		return baseList(criteriaQuery(billsBToBLabPolicyObj));
 	}
 

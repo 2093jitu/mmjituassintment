@@ -29,8 +29,8 @@ public class EmployeeService {
 		return employeeRepository.detele(reqId);
 	}
 
-	public Response list(String reqObj) {
-		return employeeRepository.list(reqObj);
+	public Response list() {
+		return employeeRepository.list();
 	}
 
 }
