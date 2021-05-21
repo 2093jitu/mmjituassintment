@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Mohammad Lockman
- *
- */
 
 public enum DateRangCriteria {
 

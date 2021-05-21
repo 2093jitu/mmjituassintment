@@ -15,15 +15,6 @@ import org.springframework.core.io.Resource;
 import com.dynamicform.app.report.JasperExportFormat;
 import com.dynamicform.app.report.ReportPathAndName;
 
-
-
-
-
-
-/**
- * @author Mohammad Lockman
- *
- */
 public class CommonFunction {
 
 	@Autowired
