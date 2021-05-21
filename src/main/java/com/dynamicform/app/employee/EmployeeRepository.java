@@ -7,19 +7,19 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import javax.transaction.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.dynamicform.app.base.AuthBaseRepository;
+import com.dynamicform.app.base.BaseRepository;
 import com.dynamicform.app.grade.GradeService;
 import com.dynamicform.app.util.Response;
 
 @Repository
 @Transactional
-public class EmployeeRepository extends AuthBaseRepository {
+public class EmployeeRepository extends BaseRepository {
 
 //	private final Long ADD_AMOUNT = 50000l;
 //	private final Long HOUSE_RENT = 20l;

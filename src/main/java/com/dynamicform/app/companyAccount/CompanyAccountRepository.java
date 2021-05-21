@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import com.dynamicform.app.base.AuthBaseRepository;
+import com.dynamicform.app.base.BaseRepository;
 import com.dynamicform.app.transaction.TransactionEntity;
 import com.dynamicform.app.transaction.TransactionService;
 import com.dynamicform.app.util.Def;
@@ -22,7 +22,7 @@ import com.dynamicform.app.util.Response;
 
 @Repository
 @Transactional
-public class CompanyAccountRepository extends AuthBaseRepository {
+public class CompanyAccountRepository extends BaseRepository  {
 
 	@Autowired
 	TransactionService transactionService;

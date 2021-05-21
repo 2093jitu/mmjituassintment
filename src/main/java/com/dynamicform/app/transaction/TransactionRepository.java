@@ -12,12 +12,12 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import com.dynamicform.app.base.AuthBaseRepository;
+import com.dynamicform.app.base.BaseRepository;
 import com.dynamicform.app.util.Response;
 
 @Repository
 @Transactional
-public class TransactionRepository extends AuthBaseRepository {
+public class TransactionRepository extends BaseRepository {
 
 	public Response save(String reqObj) {
 		TransactionEntity transactionEntity = objectMapperReadValue(reqObj, TransactionEntity.class);

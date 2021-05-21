@@ -31,10 +31,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
-/**
- * @author Mohammad Lockman
- */
-
 public interface CommonFunctions {
 
 	default Response getSuccessResponse(String message) {

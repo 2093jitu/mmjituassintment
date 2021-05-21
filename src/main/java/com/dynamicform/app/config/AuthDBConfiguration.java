@@ -34,9 +34,12 @@ public class AuthDBConfiguration {
 		System.out.println(env.getProperty("spring.datasource.url"));
 		System.out.println(env.getProperty("spring.datasource.driver-class-name"));
 
-		return DataSourceBuilder.create().username(env.getProperty("spring.datasource.username"))
-				.password(env.getProperty("spring.datasource.password")).url(env.getProperty("spring.datasource.url"))
-				.driverClassName(env.getProperty("spring.datasource.driver-class-name")).build();
+		return DataSourceBuilder.create()
+				.username(env.getProperty("spring.datasource.username"))
+				.password(env.getProperty("spring.datasource.password"))
+				.url(env.getProperty("spring.datasource.url"))
+				.driverClassName(env.getProperty("spring.datasource.driver-class-name"))
+				.build();
 	}
 
 }

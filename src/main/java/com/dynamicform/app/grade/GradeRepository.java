@@ -17,12 +17,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.dynamicform.app.base.AuthBaseRepository;
+import com.dynamicform.app.base.BaseRepository;
 import com.dynamicform.app.util.Response;
 
 @Repository
 @Transactional
-public class GradeRepository extends AuthBaseRepository {
+public class GradeRepository extends BaseRepository  {
 
 	private final Long ADD_AMOUNT = 5000l;
 	private final Long HOUSE_RENT = 20l;

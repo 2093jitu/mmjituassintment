@@ -1,9 +1,6 @@
 package com.dynamicform.app.util;
 
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -20,10 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 
-/**
- * @author Mohammad Lockman
- *
- */
 public class Def {
 
 	static String dateFormat;

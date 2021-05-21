@@ -12,11 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-
-/**
- * @author Mohammad Lockman
- *
- */
 @Configuration
 public class AuthAppConfig implements WebMvcConfigurer {
 
