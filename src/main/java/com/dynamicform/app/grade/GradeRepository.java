@@ -22,7 +22,7 @@ import com.dynamicform.app.util.Response;
 
 @Repository
 @Transactional
-public class GradeRepository extends BaseRepository  {
+public class GradeRepository extends BaseRepository {
 
 	private final Long ADD_AMOUNT = 5000l;
 	private final Long HOUSE_RENT = 20l;
@@ -143,7 +143,18 @@ public class GradeRepository extends BaseRepository  {
 		if (null != reqObj) {
 			billsBToBLabPolicyObj = objectMapperReadValue(reqObj, GradeEntity.class);
 		}
-		return baseList(criteriaQuery(billsBToBLabPolicyObj));
+
+		Response res = baseList(criteriaQuery(billsBToBLabPolicyObj));
+
+		if (res.isSuccess() && !CollectionUtils.isEmpty(res.getItems())) {
+			List<GradeEntity> grades = (List<GradeEntity>) getValueFromObject(res.getItems(), GradeEntity.class);
+			Collections.sort(grades, (o1, o2) -> o1.getId().compareTo(o2.getId()));
+			Response finalRes = new Response();
+			finalRes.setItems(grades);
+			return getSuccessResponse("Data Found !.", finalRes);
+		}
+
+		return getErrorResponse("Data Not Found!");
 	}
 
 	public Response getAll() {
