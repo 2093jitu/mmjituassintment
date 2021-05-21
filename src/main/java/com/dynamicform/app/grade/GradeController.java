@@ -24,7 +24,7 @@ public class GradeController {
 		return gradeService.save(reqObj);
 	}
 
-	@PutMapping("/update")
+	@PostMapping("/update")
 	public Response update(@RequestBody String reqObj) {
 		return gradeService.update(reqObj);
 	}

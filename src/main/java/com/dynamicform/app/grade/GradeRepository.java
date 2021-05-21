@@ -1,6 +1,11 @@
 package com.dynamicform.app.grade;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,38 +24,94 @@ import com.dynamicform.app.util.Response;
 @Transactional
 public class GradeRepository extends AuthBaseRepository {
 
-	private final Long ADD_AMOUNT = 50000l;
+	private final Long ADD_AMOUNT = 5000l;
 	private final Long HOUSE_RENT = 20l;
 	private final Long MEDICAL_ALLOWANCE = 15l;
 
-	public Response save(String reqObj) {
-		GradeEntity GradeEntity = objectMapperReadValue(reqObj, GradeEntity.class);
-		return baseOnlySave(GradeEntity);
+	public String updateGradeStaement() {
+
+		StringBuilder sql = new StringBuilder();
+		sql.append(" UPDATE grade SET ");
+		sql.append(" id = ?, name = ?, MAX_POST = ?, ");
+		sql.append(" basic = ?, HOUSE_RENT = ?, medical = ?, salary =?");
+		sql.append(" WHERE id = ?");
+
+		return sql.toString();
+
 	}
 
 	public GradeEntity updateGrade(GradeEntity gradeEntity) {
-		GradeEntity obj = findById(gradeEntity.getId());
-		Response response = new Response();
 
-		if (obj != null) {
-			obj.setBasic(gradeEntity.getBasic());
-			response = baseUpdate(obj);
-			return gradeEntity;
+		Connection con = null;
+		ResultSet rs = null;
+		PreparedStatement pstm = null;
+		con = getOraConnection();
+
+		try {
+
+			pstm = con.prepareStatement(updateGradeStaement());
+			pstm.setLong(1, gradeEntity.getId());
+			pstm.setString(2, gradeEntity.getName());
+			pstm.setLong(3, gradeEntity.getMaxPost());
+
+			pstm.setDouble(4, gradeEntity.getBasic());
+			pstm.setDouble(5, gradeEntity.getHouseRent());
+			pstm.setDouble(6, gradeEntity.getMedical());
+			pstm.setDouble(7, gradeEntity.getSalary());
+			pstm.setLong(8, gradeEntity.getId());
+
+			pstm.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			finalyConPstmRs(con, pstm, rs);
 		}
 
-		return null;
+		return gradeEntity;
+	}
+
+	public Response save(String reqObj) {
+		GradeEntity GradeEntity = objectMapperReadValue(reqObj, GradeEntity.class);
+
+		GradeEntity lastSavedGrade = new GradeEntity();
+
+		for (int i = 6; i >= 1; i--) {
+
+			GradeEntity grade = new GradeEntity();
+			Double basicSalary = i == 6 ? GradeEntity.getBasic() : lastSavedGrade.getBasic() + ADD_AMOUNT;
+			Long maxPost = (i == 1 || i == 2 ? 1l : 2l);
+
+			grade.setMaxPost(maxPost);
+			grade.setBasic(basicSalary);
+			grade.setName("Grade/Rank - " + i);
+
+			Double houseRent = (basicSalary / 100) * HOUSE_RENT;
+			Double medical = (basicSalary / 100) * MEDICAL_ALLOWANCE;
+			Double salary = basicSalary + houseRent + medical;
+
+			grade.setHouseRent(houseRent);
+			grade.setMedical(medical);
+			grade.setSalary(salary);
+
+			Response res = baseOnlySave(grade);
+
+			lastSavedGrade = getValueFromObject(res.getObj(), GradeEntity.class);
+
+		}
+
+		return getSuccessResponse("Update Successfully");
 
 	}
 
 	public Response update(String reqObj) {
-		
+
 		GradeEntity gradeEntity = objectMapperReadValue(reqObj, GradeEntity.class);
 		GradeEntity lastSavedGrade = new GradeEntity();
 
 		Response listRes = getAll();
 		List<GradeEntity> grades = (List<GradeEntity>) getValueFromObject(listRes.getItems(), GradeEntity.class);
-
-		List<Object> bachList = new ArrayList<Object>();
+		Collections.sort(grades, (o1, o2) -> o1.getId().compareTo(o2.getId()));
 
 		if (grades.get(0).getId() == gradeEntity.getId()) {
 			for (int i = 0; i < grades.size(); i++) {
@@ -66,22 +127,15 @@ public class GradeRepository extends AuthBaseRepository {
 				dbGrade.setHouseRent(houseRent);
 				dbGrade.setMedical(medical);
 				dbGrade.setSalary(salary);
-				bachList.add(dbGrade);
-				lastSavedGrade = (GradeEntity) bachList.get(i);
+				lastSavedGrade = updateGrade(dbGrade);
 			}
 		} else {
 			GradeEntity bdObj = findById(gradeEntity.getId());
-			return baseUpdate(bdObj);
+			updateGrade(bdObj);
+			return getSuccessResponse("Update Successfully");
 		}
 
-		if (bachList != null && !CollectionUtils.isEmpty(bachList)) {
-			return baseBatchSaveOrUpdate(bachList);			
-		}
-		return getErrorResponse("Update Fail !!");
-	}
-
-	public Response delete(long reqId) {
-		return null;
+		return getSuccessResponse("Update Successfully");
 	}
 
 	public Response list(String reqObj) {
@@ -97,7 +151,7 @@ public class GradeRepository extends AuthBaseRepository {
 		return baseList(criteriaQuery(billsBToBLabPolicyObj));
 	}
 
-	public Response detele(Long id) {
+	public Response delete(Long id) {
 
 		GradeEntity billsBToBLabPolicyObj = findById(id);
 		if (billsBToBLabPolicyObj == null) {
@@ -115,34 +169,6 @@ public class GradeRepository extends AuthBaseRepository {
 			return getValueFromObject(response.getObj(), GradeEntity.class);
 		}
 		return null;
-	}
-
-	private Response duplicateChecEmployeeId(GradeEntity GradeEntity) {
-		Response responce = new Response();
-
-		if (GradeEntity == null) {
-			return getErrorResponse("Search Id not found!");
-		}
-
-		Long totalCount = totalCountWithDConjunction(GradeEntity);
-
-		if (totalCount.longValue() > 0) {
-			responce.setValid(false);
-			return responce;
-		} else {
-			responce.setValid(true);
-			return responce;
-		}
-
-	}
-
-	private Long totalCountWithDConjunction(GradeEntity filter) {
-
-		CriteriaBuilder builder = criteriaBuilder();
-		CriteriaQuery<Long> criteriaQuery = longCriteriaQuery(builder);
-		Root<GradeEntity> root = from(GradeEntity.class, criteriaQuery);
-
-		return totalCount(builder, criteriaQuery, root, criteriaCondition(filter, builder, root));
 	}
 
 	// Non API
